@@ -41,7 +41,7 @@ git clone https://github.com/nikhal.regi343/task_manager_app.git
 
 ### What left to Implement?
 
-- default sorting order doesn't work.(after reloading)
 - local notification.
-- issue with the checkbox and sorting.
-- to show the no. of incomplete task.
+- when pressed FAB and we add some detail but we pressed the back button it should store the data within the labels for a while
+- to add more functionality to the dismissible(like edit on right swipe and delete on left)
+- UI of the description screen
