@@ -5,7 +5,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class TaskProvider with ChangeNotifier {
   List<TaskModel> _tasks = [];
-  List<TaskModel> get tasks => _tasks;
+
+  List<TaskModel> get tasks {
+    _tasks.sort((a, b) {
+      switch (_currentSortCriterion) {
+        case 'status':
+          return a.status.compareTo(b.status);
+        case 'date':
+          return a.startDate.compareTo(b.startDate);
+        case 'priority':
+          return _priorityValue(a.priority)
+              .compareTo(_priorityValue(b.priority));
+        default:
+          return 0;
+      }
+    });
+    return _tasks;
+  }
 
   ThemeMode _themeMode = ThemeMode.system;
   ThemeMode get themeMode => _themeMode;
@@ -36,10 +52,10 @@ class TaskProvider with ChangeNotifier {
   Future<void> _loadSortingPreference() async {
     final prefs = await SharedPreferences.getInstance();
     String? savedCriterion = prefs.getString('SortCriterion');
-    if (savedCriterion != null) {
-      _currentSortCriterion = savedCriterion;
-      sortTasksBy(_currentSortCriterion);
-    }
+    // if (savedCriterion != null) {
+    _currentSortCriterion = savedCriterion!;
+    sortTasksBy(_currentSortCriterion);
+    // }
   }
 
   void toggleTheme(bool darkMode) async {
@@ -66,22 +82,27 @@ class TaskProvider with ChangeNotifier {
   Future<void> addTask(TaskModel task) async {
     await DatabaseHelper().insertTask(task);
     await fetchTasks();
+    notifyListeners();
   }
 
   Future<void> updateTask(TaskModel task) async {
     await DatabaseHelper().updateTask(task);
     await fetchTasks();
+    notifyListeners();
   }
 
-  void updateTaskStatus(int taskId, String newStatus) {
+  void updateTaskStatus(int taskId, String newStatus) async {
     TaskModel task = _tasks.firstWhere((task) => task.id == taskId);
     task.status = newStatus;
+    await DatabaseHelper().updateTask(task);
+    await fetchTasks();
     notifyListeners();
   }
 
   Future<void> deleteTask(int id) async {
     await DatabaseHelper().deleteTask(id);
     await fetchTasks();
+    notifyListeners();
   }
 
   void sortTasksBy(String criterion) {

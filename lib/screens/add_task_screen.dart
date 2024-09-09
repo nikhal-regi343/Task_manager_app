@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/task_model.dart';
 import '../providers/task_provider.dart';
+import '../utils/date_time_utils.dart';
 import '../widgets/task_form_field.dart';
 import '../widgets/date_time_picker.dart';
 import 'main_screen.dart';
@@ -131,8 +131,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       final TaskModel newTask = TaskModel(
         startDate: startDateTime,
         endDate: endDateTime,
-        startTime: DateFormat('hh:mm a').format(startDateTime),
-        endTime: DateFormat('hh:mm a').format(endDateTime),
+        startTime: formatTime(startDateTime),
+        endTime: formatTime(endDateTime),
         title: _title,
         label: _label,
         priority: _priority,

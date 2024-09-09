@@ -36,7 +36,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   List<TaskModel> get _filteredTasks {
     final tasks = Provider.of<TaskProvider>(context, listen: false).tasks;
     final filteredByDate = tasks
-        .where((task) => _isSameDate(task.startDate, _selectedDate))
+        .where((task) =>
+            _isOnGoingTask(task.startDate, task.endDate, _selectedDate))
         .toList();
 
     if (_searchQuery.isEmpty) {
@@ -49,10 +50,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
     }
   }
 
-  bool _isSameDate(DateTime date1, DateTime date2) {
-    return date1.year == date2.year &&
-        date1.month == date2.month &&
-        date1.day == date2.day;
+  bool _isOnGoingTask(DateTime date1, DateTime date2, DateTime date3) {
+    if (date1.year == date3.year &&
+        date1.month == date3.month &&
+        (date2.day >= date3.day && date1.day <= date3.day)) {
+      return true;
+    }
+    return false;
   }
 
   Future<void> _selectDate(BuildContext context) async {

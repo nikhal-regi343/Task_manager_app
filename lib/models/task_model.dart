@@ -27,32 +27,6 @@ class TaskModel {
     required this.color,
   });
 
-  TaskModel copyWith({
-    DateTime? startDate,
-    DateTime? endDate,
-    String? startTime,
-    String? endTime,
-    String? title,
-    String? label,
-    String? priority,
-    String? status,
-    Color? color,
-    String? description,
-  }) {
-    return TaskModel(
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      startTime: startTime ?? this.startTime,
-      endTime: endTime ?? this.endTime,
-      title: title ?? this.title,
-      label: label ?? this.label,
-      priority: priority ?? this.priority,
-      status: status ?? this.status,
-      color: color ?? this.color,
-      description: description ?? this.description,
-    );
-  }
-
   Map<String, dynamic> toMap() {
     return {
       'id': id,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:task_manager_app/utils/date_time_utils.dart';
 import '../models/task_model.dart';
 import '../providers/task_provider.dart';
 import '../widgets/task_form_field.dart';
@@ -150,11 +151,12 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
       Color valueColor = Colors.black12;
 
-      final TaskModel updatedTask = widget.task.copyWith(
+      final TaskModel updatedTask = TaskModel(
+        id: widget.task.id,
         startDate: startDateTime,
         endDate: endDateTime,
-        startTime: DateFormat('hh:mm a').format(startDateTime),
-        endTime: DateFormat('hh:mm a').format(endDateTime),
+        startTime: formatTime(startDateTime),
+        endTime: formatTime(endDateTime),
         title: _title,
         label: _label,
         priority: _priority,
@@ -164,6 +166,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       );
 
       Provider.of<TaskProvider>(context, listen: false).updateTask(updatedTask);
+      Navigator.popUntil(context, (route) => route.isFirst);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const MainScreen()),
@@ -272,7 +275,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
             ),
             DropdownButton<String>(
               value: _priority,
-              onChanged: (String? newValue) {
+              onChanged: (newValue) {
                 setState(() {
                   _priority = newValue!;
                 });

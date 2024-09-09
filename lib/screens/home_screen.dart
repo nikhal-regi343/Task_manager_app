@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:task_manager_app/screens/due_task_screen.dart';
 import '../providers/task_provider.dart';
 import '../widgets/task_item.dart';
 import '../screens/preference_screen.dart';
@@ -14,8 +15,12 @@ class HomeScreen extends StatelessWidget {
     final activeTasks = tasks
         .where((task) =>
             task.status != 'Completed' &&
-                DateTime.now().isBefore(task.startDate) ||
+                DateTime.now().isBefore(task.endDate) ||
             DateTime.now().isAtSameMomentAs(task.startDate))
+        .toList();
+    final dueTasks = tasks
+        .where((task) =>
+            task.status != 'Completed' && DateTime.now().isAfter(task.endDate))
         .toList();
 
     return Scaffold(
@@ -46,6 +51,29 @@ class HomeScreen extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
+                      Container(
+                        // color: Colors.yellow,
+                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                        margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                        decoration: BoxDecoration(
+                            color: Colors.deepPurpleAccent,
+                            borderRadius: BorderRadius.circular(50)),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const DueTaskScreen(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'No. of Pending Tasks Remaining: ${dueTasks.length}',
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 12),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                   InkWell(
@@ -59,7 +87,7 @@ class HomeScreen extends StatelessWidget {
                     },
                     child: const CircleAvatar(
                       radius: 50,
-                      backgroundImage: AssetImage('assets/avatar.png'),
+                      backgroundImage: AssetImage('assets/avatar.jpeg'),
                     ),
                   ),
                 ],
@@ -69,7 +97,7 @@ class HomeScreen extends StatelessWidget {
               height: 30,
             ),
             const Text(
-              'Upcoming Tasks:',
+              'Upcoming/Ongoing Tasks:',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

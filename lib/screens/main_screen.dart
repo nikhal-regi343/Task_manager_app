@@ -13,7 +13,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 0;
+  int _currIndex = 0;
 
   @override
   void initState() {
@@ -28,14 +28,14 @@ class _MainScreenState extends State<MainScreen> {
 
   void _onItemTapped(int index) {
     setState(() {
-      _currentIndex = index;
+      _currIndex = index;
     });
   }
 
   @override
   Widget build(context) {
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: _screens[_currIndex],
       bottomNavigationBar: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -50,7 +50,7 @@ class _MainScreenState extends State<MainScreen> {
                 label: 'Calendar',
               ),
             ],
-            currentIndex: _currentIndex,
+            currentIndex: _currIndex,
             onTap: _onItemTapped,
           ),
           Positioned(

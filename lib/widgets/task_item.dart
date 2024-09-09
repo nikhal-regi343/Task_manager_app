@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/task_model.dart';
+import '../providers/task_provider.dart';
 import '../screens/task_detail_screen.dart';
+import 'package:provider/provider.dart';
 
 class TaskItem extends StatefulWidget {
   final TaskModel task;
@@ -22,9 +24,11 @@ class _TaskItemState extends State<TaskItem> {
 
   void _toggleCheckbox(bool? value) {
     setState(() {
-      _isChecked = value ?? false;
+      _isChecked = value!;
       widget.task.status = _isChecked ? 'Completed' : 'Pending';
     });
+    Provider.of<TaskProvider>(context, listen: false)
+        .updateTaskStatus(widget.task.id!, widget.task.status);
   }
 
   @override
@@ -47,6 +51,23 @@ class _TaskItemState extends State<TaskItem> {
                   ),
                   Text(
                     widget.task.startTime,
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Icon(
+                      Icons.arrow_downward, // Down arrow icon
+                      size: 30, // Size of the arrow
+                      color: Colors.grey[600], // Color of the arrow
+                    ),
+                  ),
+                  Text(
+                    '${widget.task.endDate.day.toString().padLeft(2, '0')} ${_monthNames[widget.task.endDate.month - 1]}', // Format date
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    widget.task.endTime,
                     style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   ),
                 ],

@@ -61,6 +61,7 @@ class DatabaseHelper {
 
   Future<int> updateTask(TaskModel task) async {
     final db = await database;
+    print(task);
     return await db.update(
       'tasks',
       task.toMap(),
